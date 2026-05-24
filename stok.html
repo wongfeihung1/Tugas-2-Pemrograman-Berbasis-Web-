@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informasi Bahan Ajar — SITTA</title>
+  <link rel="stylesheet" href="CSS/style.css">
+  <style>
+    #stok-header h1 { border-left: 4px solid var(--kuning-ut); padding-left: 12px; }
+    #tabelStok th   { letter-spacing: 0.5px; font-size: 13px; }
+
+    /* Filter Bar */
+    .filter-bar {
+      background: white;
+      border-radius: 10px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: flex-end;
+    }
+    .filter-bar label { font-size: 12px; font-weight: bold; color: var(--teks-abu); display: block; margin-bottom: 5px; text-transform: uppercase; }
+    .filter-bar select,
+    .filter-bar input  { padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .filter-bar select:focus,
+    .filter-bar input:focus { border-color: var(--biru-ut); }
+
+    /* Badge status */
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .badge-aman    { background: #d5f5e3; color: #1e8449; }
+    .badge-menipis { background: #fdebd0; color: #ca6f1e; }
+    .badge-kosong  { background: #fadbd8; color: #a93226; }
+
+    /* Edit input inline */
+    .edit-input { width: 70px; padding: 4px 8px; border: 2px solid var(--kuning-ut); border-radius: 6px; font-size: 13px; text-align: center; }
+
+    /* Chip filter aktif */
+    .filter-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #e8f4fd; color: var(--biru-ut);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 12px; font-weight: 600; margin-bottom: 10px; margin-right: 6px;
+    }
+    .filter-chip button { background: none; border: none; cursor: pointer; color: var(--biru-ut); font-size: 14px; }
+
+    /* Reorder banner */
+    .reorder-banner {
+    background: #fff3cd; border: 1px solid #ffc107;
+    border-radius: 8px; padding: 10px 16px;
+    font-size: 13px; color: #856404; margin-bottom: 14px;
+    display: block;
+    }
+    .jumlah-info { font-size: 13px; color: var(--teks-abu); margin-bottom: 10px; }
+
+    /* Tombol aksi tabel */
+    .btn-edit   { background: var(--biru-ut); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .btn-hapus  { background: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-left: 4px; }
+    .btn-simpan { background: #27ae60; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .btn-batal  { background: white; color: var(--biru-ut); border: 2px solid var(--biru-ut); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-left: 4px; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 999; }
+    .modal-box { background: white; border-radius: 14px; padding: 28px; width: 90%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-header h3 { font-size: 17px; color: var(--biru-ut); }
+    .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--teks-abu); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .span-2 { grid-column: span 2; }
+    .form-group { margin-bottom: 0; }
+    .form-group label { display: block; font-size: 12px; font-weight: bold; color: var(--teks-abu); text-transform: uppercase; margin-bottom: 5px; }
+    .form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--biru-ut); }
+    .error-msg { color: #e74c3c; font-size: 11px; margin-top: 3px; }
+    .alert-sukses { background: #d5f5e3; color: #1e8449; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px; }
+    .alert-gagal  { background: #fadbd8; color: #a93226; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-top: 12px; }
+    .catatan-cell { max-width: 160px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="dashboard.html" id="nav-brand">
+      <img src="img/logo ut.png" alt="Logo UT" style="height:28px;vertical-align:middle;margin-right:8px;">
+      SITTA
+    </a>
+    <div id="nav-menu">
+      <a href="stok.html">Informasi Bahan Ajar</a>
+      <a href="tracking.html">Tracking Pengiriman</a>
+      <div class="dropdown">
+        <a href="#" id="btnLaporan">Laporan ▾</a>
+        <div class="dropdown-menu" id="dropdownLaporan">
+          <a href="#">Monitoring Progress DO</a>
+          <a href="#">Rekap Bahan Ajar</a>
+        </div>
+      </div>
+      <a href="#">Histori Transaksi</a>
+      <a href="index.html" id="btnLogout">Keluar</a>
+    </div>
+  </nav>
+
+  <!-- ===================== VUE APP ===================== -->
+  <div id="app-stok">
+    <main id="stok-content">
+
+      <!-- Header -->
+      <div id="stok-header">
+        <h1>Informasi Stok Bahan Ajar</h1>
+        <button id="btnTambah" @click="tampilFormTambah = true">+ Tambah Stok</button>
+      </div>
+
+      <!-- Reorder Banner -->
+      <div class="reorder-banner" v-if="jumlahReorder > 0">
+        ⚠️ Terdapat <strong>{{ jumlahReorder }} item</strong> yang stoknya menipis atau habis dan perlu segera di-reorder.
+        <a href="#" @click.prevent="filterReorder = !filterReorder" style="color:#856404;font-weight:700;margin-left:8px;">
+          {{ filterReorder ? 'Tampilkan Semua' : 'Lihat Item Reorder' }}
+        </a>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div>
+          <label>🔍 Cari</label>
+          <input v-model="cari" placeholder="Nama / Kode..." style="width:190px;">
+        </div>
+        <div>
+          <label>🏢 UT-Daerah</label>
+          <select v-model="filterUpbjj" @change="filterKategori = ''">
+            <option value="">Semua Daerah</option>
+            <option v-for="u in upbjjList" :key="u" :value="u">{{ u }}</option>
+          </select>
+        </div>
+        <!-- Dependent: muncul hanya setelah pilih daerah -->
+        <div v-if="filterUpbjj">
+          <label>📚 Kategori</label>
+          <select v-model="filterKategori">
+            <option value="">Semua Kategori</option>
+            <option v-for="k in kategoriDiDaerah" :key="k" :value="k">{{ k }}</option>
+          </select>
+        </div>
+        <div style="align-self:flex-end;">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:bold;color:#856404;text-transform:uppercase;">
+            <input type="checkbox" v-model="filterReorder" style="width:auto;"> Stok Menipis / Habis
+          </label>
+        </div>
+        <div>
+          <label>↕️ Urutkan</label>
+          <select v-model="sortKey">
+            <option value="">— Pilih —</option>
+            <option value="judul">Judul</option>
+            <option value="qty">Stok</option>
+            <option value="harga">Harga</option>
+          </select>
+        </div>
+        <div v-if="sortKey" style="align-self:flex-end;">
+          <select v-model="sortAsc">
+            <option :value="true">A→Z / Terkecil</option>
+            <option :value="false">Z→A / Terbesar</option>
+          </select>
+        </div>
+        <div style="align-self:flex-end;">
+          <button @click="resetFilter" style="background:white;color:var(--biru-ut);border:2px solid var(--biru-ut);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:bold;">↺ Reset</button>
+        </div>
+      </div>
+
+      <!-- Chips filter aktif -->
+      <div>
+        <span class="filter-chip" v-if="filterUpbjj">
+          🏢 {{ filterUpbjj }} <button @click="filterUpbjj=''; filterKategori=''">✕</button>
+        </span>
+        <span class="filter-chip" v-if="filterKategori">
+          📚 {{ filterKategori }} <button @click="filterKategori=''">✕</button>
+        </span>
+        <span class="filter-chip" v-if="filterReorder" style="background:#fff3cd;color:#856404;">
+          ⚠️ Hanya Reorder <button @click="filterReorder=false" style="color:#856404;">✕</button>
+        </span>
+      </div>
+
+      <p class="jumlah-info">Menampilkan <strong>{{ stokDitampilkan.length }}</strong> dari {{ stok.length }} item</p>
+
+      <!-- Tabel -->
+      <div id="tabel-wrap">
+        <table id="tabelStok">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Kode</th>
+              <th>Nama Mata Kuliah</th>
+              <th>Kategori</th>
+              <th>UT-Daerah</th>
+              <th>Lok. Rak</th>
+              <th>Stok (qty)</th>
+              <th>Safety</th>
+              <th>Harga</th>
+              <th>Status</th>
+              <th>Catatan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="stokDitampilkan.length === 0">
+              <td colspan="12" style="text-align:center;padding:32px;color:var(--teks-abu);">
+                Tidak ada data yang cocok dengan filter.
+              </td>
+            </tr>
+            <tr v-for="(item, idx) in stokDitampilkan" :key="item.kode">
+              <td>{{ idx + 1 }}</td>
+              <td><code style="font-size:12px;">{{ item.kode }}</code></td>
+              <td style="font-weight:600;">{{ item.judul }}</td>
+              <td>{{ item.kategori }}</td>
+              <td>{{ item.upbjj }}</td>
+              <td>{{ item.lokasiRak }}</td>
+              <!-- Stok: editable inline -->
+              <td>
+                <template v-if="editIndex === getIndex(item)">
+                  <input class="edit-input" type="number" v-model.number="editQty" min="0"
+                    @keyup.enter="simpanEdit" @keyup.escape="batalEdit">
+                </template>
+                <template v-else>
+                  <span :class="['badge',
+                    item.qty === 0          ? 'badge-kosong'  :
+                    item.qty < item.safety  ? 'badge-menipis' : 'badge-aman']">
+                    {{ item.qty }}
+                  </span>
+                </template>
+              </td>
+              <td>{{ item.safety }}</td>
+              <td>{{ formatRupiah(item.harga) }}</td>
+              <!-- Status -->
+              <td>
+                <span v-if="item.qty === 0"          class="badge badge-kosong">🔴 Kosong</span>
+                <span v-else-if="item.qty < item.safety" class="badge badge-menipis">🟠 Menipis</span>
+                <span v-else                          class="badge badge-aman">🟢 Aman</span>
+              </td>
+              <td class="catatan-cell" v-html="item.catatanHTML"></td>
+              <!-- Aksi -->
+              <td style="white-space:nowrap;">
+                <template v-if="editIndex === getIndex(item)">
+                  <button class="btn-simpan" @click="simpanEdit">✔ Simpan</button>
+                  <button class="btn-batal"  @click="batalEdit">✕</button>
+                </template>
+                <template v-else>
+                  <button class="btn-edit"  @click="mulaiEdit(item)">✏️ Edit</button>
+                  <button class="btn-hapus" @click="hapusItem(item)">🗑</button>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Detail (dari Tugas 1, dikonversi Vue) -->
+      <div class="modal-overlay" v-if="itemDetail" @click.self="itemDetail = null">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3>Detail Bahan Ajar</h3>
+            <button class="modal-close" @click="itemDetail = null">✕</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">Kode</div>
+              <div style="font-weight:600;">{{ itemDetail.kode }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">UT-Daerah</div>
+              <div style="font-weight:600;">{{ itemDetail.upbjj }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;grid-column:span 2;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">Nama Mata Kuliah</div>
+              <div style="font-weight:600;font-size:15px;">{{ itemDetail.judul }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">Kategori</div>
+              <div style="font-weight:600;">{{ itemDetail.kategori }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">Lokasi Rak</div>
+              <div style="font-weight:600;">{{ itemDetail.lokasiRak }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:4px;">Harga</div>
+              <div style="font-weight:600;color:var(--biru-ut);">{{ formatRupiah(itemDetail.harga) }}</div>
+            </div>
+            <div style="background:#f0f4f8;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:11px;font-weight:bold;color:var(--teks-abu);text-transform:uppercase;margin-bottom:6px;">Stok Tersedia</div>
+              <div style="font-size:28px;font-weight:800;color:var(--kuning-ut);">{{ itemDetail.qty }}</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button @click="itemDetail = null" style="background:var(--biru-ut);color:white;border:none;padding:9px 22px;border-radius:8px;cursor:pointer;font-weight:bold;">Tutup</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Tambah Stok Baru -->
+      <div class="modal-overlay" v-if="tampilFormTambah" @click.self="tutupFormTambah">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3>➕ Tambah Stok Baru</h3>
+            <button class="modal-close" @click="tutupFormTambah">✕</button>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Kode *</label>
+              <input v-model="formBaru.kode" placeholder="cth: MKDU4110">
+              <p class="error-msg" v-if="errorBaru.kode">{{ errorBaru.kode }}</p>
+            </div>
+            <div class="form-group">
+              <label>Judul *</label>
+              <input v-model="formBaru.judul" placeholder="Nama mata kuliah">
+              <p class="error-msg" v-if="errorBaru.judul">{{ errorBaru.judul }}</p>
+            </div>
+            <div class="form-group">
+              <label>Kategori *</label>
+              <select v-model="formBaru.kategori">
+                <option value="">— Pilih —</option>
+                <option v-for="k in kategoriList" :key="k" :value="k">{{ k }}</option>
+              </select>
+              <p class="error-msg" v-if="errorBaru.kategori">{{ errorBaru.kategori }}</p>
+            </div>
+            <div class="form-group">
+              <label>UT-Daerah *</label>
+              <select v-model="formBaru.upbjj">
+                <option value="">— Pilih —</option>
+                <option v-for="u in upbjjList" :key="u" :value="u">{{ u }}</option>
+              </select>
+              <p class="error-msg" v-if="errorBaru.upbjj">{{ errorBaru.upbjj }}</p>
+            </div>
+            <div class="form-group">
+              <label>Lokasi Rak</label>
+              <input v-model="formBaru.lokasiRak" placeholder="cth: R1-A5">
+            </div>
+            <div class="form-group">
+              <label>Harga *</label>
+              <input type="number" v-model.number="formBaru.harga" placeholder="cth: 65000" min="0">
+              <p class="error-msg" v-if="errorBaru.harga">{{ errorBaru.harga }}</p>
+            </div>
+            <div class="form-group">
+              <label>Stok (qty) *</label>
+              <input type="number" v-model.number="formBaru.qty" placeholder="cth: 50" min="0">
+              <p class="error-msg" v-if="errorBaru.qty">{{ errorBaru.qty }}</p>
+            </div>
+            <div class="form-group">
+              <label>Safety Stock *</label>
+              <input type="number" v-model.number="formBaru.safety" placeholder="cth: 10" min="0">
+              <p class="error-msg" v-if="errorBaru.safety">{{ errorBaru.safety }}</p>
+            </div>
+            <div class="form-group span-2">
+              <label>Catatan</label>
+              <input v-model="formBaru.catatanHTML" placeholder="cth: Edisi terbaru, cetak ulang">
+            </div>
+          </div>
+          <div class="alert-gagal"  v-if="pesanGagal">{{ pesanGagal }}</div>
+          <div class="alert-sukses" v-if="pesanSukses">{{ pesanSukses }}</div>
+          <div class="modal-footer">
+            <button @click="tutupFormTambah" style="background:white;color:var(--biru-ut);border:2px solid var(--biru-ut);padding:9px 20px;border-radius:8px;cursor:pointer;font-weight:bold;">Batal</button>
+            <button @click="simpanBaru" style="background:var(--kuning-ut);color:white;border:none;padding:9px 22px;border-radius:8px;cursor:pointer;font-weight:bold;">Simpan</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div><!-- end #app-stok -->
+
+  <!-- Dropdown navbar (vanilla JS, tidak perlu Vue) -->
+  <script>
+    document.getElementById('btnLaporan').addEventListener('click', function(e) {
+      e.preventDefault();
+      var m = document.getElementById('dropdownLaporan');
+      m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    });
+    document.addEventListener('click', function(e) {
+      var m = document.getElementById('dropdownLaporan');
+      var b = document.getElementById('btnLaporan');
+      if (m && b && !b.contains(e.target)) m.style.display = 'none';
+    });
+    document.getElementById('btnLogout').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Apakah Anda yakin ingin keluar?')) {
+        sessionStorage.removeItem('userLogin');
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="JS/data.js"></script>
+  <script src="JS/dataBahanAjar.js"></script>
+  <script src="JS/stok-app.js"></script>
+</body>
+</html>

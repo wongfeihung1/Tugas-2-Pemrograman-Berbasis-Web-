@@ -1,0 +1,662 @@
+/* ===========================
+   CSS Variables (warna utama)
+   =========================== */
+:root {
+  --biru-ut: #005B99;
+  --kuning-ut: #F5A623;
+  --bg: #f0f4f8;
+  --putih: #ffffff;
+  --teks: #1a2b3c;
+  --teks-abu: #6b7a8d;
+  --border: #dde3ea;
+}
+
+/* ===========================
+   Reset dasar
+   =========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--teks);
+  margin: 0;
+  padding: 0;
+}
+
+body.halaman-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* ===========================
+   Kotak Login
+   =========================== */
+body.halaman-login main {
+  background: var(--putih);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+main h1 {
+  font-size: 26px;
+  color: var(--biru-ut);
+  margin-bottom: 8px;
+}
+
+main p {
+  font-size: 14px;
+  color: var(--teks-abu);
+  margin-bottom: 28px;
+}
+
+/* ===========================
+   Form & Input
+   =========================== */
+form div {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--teks-abu);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+form input {
+  padding: 11px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+form input:focus {
+  border-color: var(--biru-ut);
+}
+
+/* ===========================
+   Tombol Masuk
+   =========================== */
+form button {
+  width: 100%;
+  padding: 13px;
+  background-color: var(--kuning-ut);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+form button:hover {
+  background-color: #d4881a;
+}
+
+/* ===========================
+   Link Lupa Password & Daftar
+   =========================== */
+main > div {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+main > div a {
+  font-size: 13px;
+  color: var(--biru-ut);
+  text-decoration: none;
+}
+
+main > div a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================
+   Navbar
+   =========================== */
+#navbar {
+  background-color: var(--biru-ut);
+  padding: 14px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#nav-brand {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#nav-menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#nav-menu a:hover {
+  color: var(--kuning-ut);
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 28px;
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  min-width: 200px;
+  z-index: 100;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 11px 16px;
+  color: var(--teks) !important;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+  background: var(--bg);
+  color: var(--biru-ut) !important;
+}
+
+/* ===========================
+   Dashboard Content
+   =========================== */
+#dashboard-content {
+  padding: 36px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#dashboard-content h1 {
+  font-size: 26px;
+  color: var(--biru-ut);
+  margin-bottom: 6px;
+}
+
+#info-user {
+  font-size: 14px;
+  color: var(--teks-abu);
+  margin-bottom: 32px;
+}
+
+/* Kartu menu */
+#kartu-menu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.kartu {
+  background: white;
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  text-decoration: none;
+  color: var(--teks);
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid transparent;
+}
+
+.kartu:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0,91,153,0.15);
+  border-color: var(--biru-ut);
+  color: var(--biru-ut);
+}
+
+.kartu-icon {
+  width: 56px;
+  height: 56px;
+  background-color: var(--biru-ut);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;  
+  font-weight: bold;
+  margin: 0 auto 14px;
+}
+
+/* ===========================
+   Halaman Stok
+   =========================== */
+#stok-content {
+  padding: 30px 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+#stok-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+#stok-header h1 {
+  font-size: 22px;
+  color: var(--biru-ut);
+}
+
+#btnTambah {
+  background-color: var(--biru-ut);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#btnTambah:hover {
+  background-color: var(--kuning-ut);
+}
+
+/* Form tambah */
+#formTambah {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+#formTambah h3 {
+  margin-bottom: 16px;
+  color: var(--biru-ut);
+}
+
+.form-tambah-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-tambah-grid label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--teks-abu);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.form-tambah-grid input,
+.form-tambah-grid select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+}
+
+.form-tambah-grid input:focus,
+.form-tambah-grid select:focus {
+  border-color: var(--biru-ut);
+}
+
+#formTambah-actions {
+  display: flex;
+  gap: 10px;
+}
+
+#btnSimpan {
+  background: var(--biru-ut);
+  color: white;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#btnBatal {
+  background: white;
+  color: var(--biru-ut);
+  border: 2px solid var(--biru-ut);
+  padding: 9px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Tabel */
+#tabelStok {
+  width: 100%;
+  border-collapse: collapse;
+}
+#tabel-wrap {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow-x: auto;
+  width: 100%;
+}
+
+#tabelStok thead {
+  background-color: var(--biru-ut);
+  color: white;
+}
+
+#tabelStok th,
+#tabelStok td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+}
+
+#tabelStok tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+#tabelStok tbody tr:hover {
+  background-color: #e8f0fe;
+}
+
+.stok-rendah {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.stok-aman {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+/* ===========================
+   Halaman Tracking
+   =========================== */
+#tracking-content {
+  padding: 30px 40px;
+}
+
+#tracking-content h1 {
+  font-size: 22px;
+  color: var(--biru-ut);
+  margin-bottom: 6px;
+}
+
+#tracking-content > p {
+  font-size: 14px;
+  color: var(--teks-abu);
+  margin-bottom: 24px;
+}
+
+/* Form cari */
+#tracking-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+#tracking-form input {
+  flex: 1;
+  padding: 11px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  max-width: 400px;
+}
+
+#tracking-form input:focus {
+  border-color: var(--biru-ut);
+}
+
+#btnCari {
+  background: var(--biru-ut);
+  color: white;
+  border: none;
+  padding: 11px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#btnCari:hover {
+  background: var(--kuning-ut);
+}
+
+/* Hero tracking */
+#tracking-hero {
+  background: var(--biru-ut);
+  color: white;
+  border-radius: 12px;
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#tracking-hero h2 {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 4px;
+}
+
+#tracking-hero p {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+#status-badge {
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Progress bar */
+#tracking-progress {
+  background: white;
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+#progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--teks);
+  margin-bottom: 10px;
+}
+
+#progress-bar-wrap {
+  background: var(--border);
+  border-radius: 8px;
+  height: 12px;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.8s ease;
+}
+
+/* Detail info */
+#tracking-detail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.detail-item label {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--teks-abu);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.detail-item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teks);
+}
+
+/* Timeline */
+#tracking-timeline {
+  background: white;
+  border-radius: 10px;
+  padding: 22px 26px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+#tracking-timeline h3 {
+  font-size: 15px;
+  color: var(--biru-ut);
+  margin-bottom: 18px;
+}
+
+#listPerjalanan {
+  list-style: none;
+  position: relative;
+  padding-left: 0;
+}
+
+#listPerjalanan::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-item {
+  display: flex;
+  gap: 16px;
+  padding: 0 0 20px 36px;
+  position: relative;
+}
+
+.tl-item:last-child { padding-bottom: 0; }
+
+.tl-dot {
+  position: absolute;
+  left: 3px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.tl-selesai .tl-dot { background: var(--biru-ut); box-shadow: 0 0 0 2px var(--biru-ut); }
+.tl-aktif   .tl-dot { background: var(--kuning-ut); box-shadow: 0 0 0 2px var(--kuning-ut); }
+
+.tl-info { display: flex; flex-direction: column; gap: 3px; }
+.tl-waktu { font-size: 12px; color: var(--teks-abu); }
+.tl-keterangan { font-size: 13px; font-weight: 500; color: var(--teks); }
+
+/* Tidak ditemukan */
+#tidak-ditemukan {
+  background: white;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  color: var(--teks-abu);
+  font-size: 14px;
+}
+
+/* ===========================
+   Statistik Dashboard
+   =========================== */
+#statistik {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-top: 4px solid var(--biru-ut);
+}
+
+.stat-angka {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--biru-ut);
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--teks-abu);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
